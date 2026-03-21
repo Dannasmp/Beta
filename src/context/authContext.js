@@ -8,9 +8,16 @@ export const AuthProvider = ({ children }) => {
     const [isLoading, setIsLoading] = useState(true);
 
     const login = async (token) => {
-        setUserToken(token);
-        await AsyncStorage.setItem('userToken', token);
-    };
+    console.log("TOKEN GUARDADO:", token);
+
+    if (!token) {
+        console.log("❌ TOKEN VACÍO");
+        return;
+    }
+
+    setUserToken(token);
+    await AsyncStorage.setItem('userToken', token);
+};
 
     const logout = async () => {
         setUserToken(null);
@@ -21,20 +28,19 @@ export const AuthProvider = ({ children }) => {
         try {
             const token = await AsyncStorage.getItem('userToken');
             setUserToken(token);
-            setIsLoading(false);
         } catch (e) {
             console.log('Error en persistencia: ', e);
         } 
-            
-        };
+        setIsLoading(false); 
+    };
 
-        useEffect(() => {
-            isLoggedIn();
-        }, [])
+    useEffect(() => {
+        isLoggedIn();
+    }, [])
 
-        return (
-            <AuthContext.Provider value={{  login, logout, userToken, isLoading }}>
-                {children}
-            </AuthContext.Provider>
-        )
+    return (
+        <AuthContext.Provider value={{ login, logout, userToken, isLoading }}>
+            {children}
+        </AuthContext.Provider>
+    )
 }

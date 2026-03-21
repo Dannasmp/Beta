@@ -10,21 +10,37 @@ const LoginScreen = () => {
     const { login } = useContext(AuthContext);
 
     const handleLogin = async () => {
-        if (!email || !password) {
-            return Alert.alert("Error", "Complete todos los campos");
+    if (!email || !password) {
+        return Alert.alert("Error", "Complete todos los campos");
+    }
+
+    setLoading(true);
+
+    try {
+        console.log("🚀 INICIANDO LOGIN");
+
+        const data = await loginService(email, password);
+
+        console.log("✅ RESPUESTA:", data);
+
+        const token = data?.token || data?.access || data?.idToken;
+
+        console.log("🔑 TOKEN:", token);
+
+        if (!token) {
+            throw new Error("No se recibió token");
         }
 
-        setLoading(true);
-        try {
-            const data = await loginService(email, password);
-            login(data.token);
-        } catch (e) {
-            Alert.alert("Error de login", e.message);
-        } finally {
-            setLoading(false);
-        }
-    };
+        await login(token);
 
+    } catch (e) {
+        console.log("❌ ERROR LOGIN:", e);
+        Alert.alert("Error de login", e.message);
+    } finally {
+        setLoading(false);
+    }
+};
+    
     return (
         <View style={styles.container}>
             <Text style={styles.title}>
@@ -49,9 +65,9 @@ const LoginScreen = () => {
             />
 
             {loading ? (
-                <ActivityIndicator size="large" color="#5e17eb" />
+                <ActivityIndicator size="large" color="#020e52" />
             ) : (
-                <Button title="Iniciar Sesión" onPress={handleLogin} color="#5e17eb" />
+                <Button title="Iniciar Sesión" onPress={handleLogin} color="#020e52" />
             )}
         </View>
     );
