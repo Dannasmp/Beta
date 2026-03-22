@@ -18,6 +18,10 @@ const HomeScreen = ({ navigation }) => {
     }
   };
 
+// <<<<<<< HEAD
+// =======
+//   // 🔥 ESTO ES LA CLAVE
+// >>>>>>> 54fe935d5cd20d1407afe2a99214208a1b22b2f5
   useFocusEffect(
     useCallback(() => {
       cargarPerfil();

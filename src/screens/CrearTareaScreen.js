@@ -51,6 +51,4 @@ onPress={crearTarea}
 </View>
 
 );
-
 }
-
